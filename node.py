@@ -31,7 +31,7 @@ class ChordNode:
     def findPredecessorNode(self, nodeId: int) -> str:
         pass
 
-    def closestPrecedingFinger(self, nodeId: int) -> int:
+    def closestPrecedingFinger(self, nodeId: int) -> str:
         '''
         Given a nodeId, returns the node id of the closest preceding finger table entry.
         '''
@@ -49,6 +49,8 @@ class ChordNode:
         '''
         pass
 
+#############################
+
 class BootstrapNode(ChordNode):
     def __init__(self, ip_address: str, port: str) -> None:
         super().__init__(ip_address, port)
@@ -59,9 +61,14 @@ class BootstrapNode(ChordNode):
         for i in range(1, m+1):
             start = (self.nodeId + 2 ** (i-1)) % (2 ** m)
             interval = range(0, 2**m)
-            node = self
-            self.fingerTable[i] = {'start': start, 'interval': interval, 'node': node}
+            nodeUrl = f"{self.ip}:{self.port}"
+            self.fingerTable[i] = {'start': start, 'interval': interval, 'node_url': nodeUrl}
 
+#############################
+
+# Dev note:
+# This class needs to be updated to use tcp/ip rather than in memory objects for 
+# communication with the bootstrap node.
 class RegularNode(ChordNode):
     def __init__(self, ip_address: str, port: str, bootstrapNode: BootstrapNode) -> None:
         super().__init__(ip_address, port)
@@ -76,6 +83,8 @@ class RegularNode(ChordNode):
         Will hit bootstrap node to find successor for each finger table entry.
         """
         pass
+
+#############################
 
 class ChordNodeFactory():
     @staticmethod
